@@ -1,0 +1,29 @@
+const pi=3;
+var c, flag;
+procedure compare;
+var area1, area2;
+procedure rad;
+var r1, r2;
+
+begin
+r1:=c/(2*pi);
+r2:=c/4;
+area1:=pi*r1*r1;
+area2:=r2*r2;
+end;
+
+begin
+call rad;
+if area1<area2 then
+begin
+write (area2);
+flag:=2;
+end;
+end;
+
+begin
+flag:=1;
+c:=16;
+call compare;
+write(flag);
+end.

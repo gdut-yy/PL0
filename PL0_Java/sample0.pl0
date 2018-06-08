@@ -1,0 +1,28 @@
+const a=10; var result;
+procedure average;
+var temp, addition, count;
+
+procedure add;
+  begin
+     temp:=temp+2;
+     write(temp);
+  end;
+
+begin
+    temp:=a;
+    count:=1;
+    addition:=temp;
+    while temp<=20 do
+       begin
+           call add;
+           count:=count+1;
+           addition:=addition+temp;
+       end;
+    result:=addition/count;
+end;
+
+begin
+   write(a);
+   call average;
+   write(result);
+end.

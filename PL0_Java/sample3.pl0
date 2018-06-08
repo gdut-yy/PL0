@@ -1,0 +1,31 @@
+const bound=30;
+var input, count;
+procedure guess;
+var temp, upper, lower;
+procedure locate;
+
+begin
+temp:=(upper+lower)/2;
+if temp<input then
+lower:=temp+1;
+if temp>input then
+upper:=temp-1;
+end;
+
+begin
+upper:=bound;
+lower:=0;
+temp:=(upper+lower)/2;
+while temp#input do
+begin
+count:=count+1;
+call locate;
+end;
+end;
+
+begin
+input:=6;
+count:=1;
+call guess;
+write(count);
+end.
