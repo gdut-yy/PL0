@@ -1,0 +1,55 @@
+Input pl/0 file?   y
+0 const true=1, false=0;
+
+1 var i, j, k;
+
+1 procedure recttri;
+
+1 
+
+1 var temp1, temp2, temp3;
+
+2     begin
+
+3          write ( i );
+
+6          write (j);
+
+9          write(k);
+
+12          temp2:=j*j;
+
+16          temp3:=k*k;
+
+20          while temp1+temp2 #temp3 do
+
+26                 begin
+
+26                      write(false);
+
+29                       i:=i+1;
+
+33 		      temp1:=i*i;
+
+37                 end;
+
+38                 write(true);
+
+41         end;
+
+42 
+
+42 begin
+
+43 i:=3;
+
+45 j:=8;
+
+47 k:=10;
+
+49 call recttri;
+
+50 write(i);
+
+53 end.
+

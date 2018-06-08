@@ -1,0 +1,9 @@
+    7 var   temp1 lev=1 addr=3
+    8 var   temp2 lev=1 addr=4
+    9 var   temp3 lev=1 addr=5
+    1 const true val=1
+    2 const false val=0
+    3 var   i lev=0 addr=3
+    4 var   j lev=0 addr=4
+    5 var   k lev=0 addr=5
+    6 proc  recttri lev=0 addr=2 size=6

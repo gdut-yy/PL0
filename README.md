@@ -1,14 +1,14 @@
 # PL/0 语言编译系统
 
-## 一、Index
+## 一、INDEX
 
 | 目录 | 说明 |
 | - | - |
 | [PL0_Raw](https://github.com/gdut-yy/PL0/tree/master/PL0_Raw) | 老师所提供的PL0项目（原始代码，实验和课设需在此基础上进行功能扩充） |
 | [PL0_Exp](https://github.com/gdut-yy/PL0/tree/master/PL0_Exp) | 本人的实验报告项目 |
 | [PL0_Des](https://github.com/gdut-yy/PL0/tree/master/PL0_Des) | 本人的课程设计项目 |
-| PL0_Cpp | 教材附录A中的 PL/0代码（C版本）。（本人所用编译器是 VS2017） |
-| PL0_Java | PL0_Cpp 改写而成的 PL/0代码 Java版本。（本人所用编译器是 eclipse） |
+| [PL0_Cpp](https://github.com/gdut-yy/PL0_Cpp) | 教材附录A中的 PL/0代码（C版本）。（本人所用编译器是 VS2017） |
+| [PL0_Java](https://github.com/gdut-yy/PL0/tree/master/PL0_Java) | PL0_Cpp 改写而成的 PL/0代码 Java版本。（本人所用编译器是 eclipse） |
 
 ## 二、关于本项目
 
