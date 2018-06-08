@@ -1,0 +1,21 @@
+CONST I=5, B=20; C=1, D=2;
+VAR I,J; X,Y;
+PROCEDURE J;
+BEGIN
+  J:=I
+END;
+PROCEDURE K;
+BEGIN
+  J:=I
+END;
+BEGIN
+  WRITE(I);
+  I:=1;
+  WHILE I<10 DO
+    BEGIN
+      BEGIN
+      END;
+      WRITE(I);
+      I:=I+1
+    END
+END.

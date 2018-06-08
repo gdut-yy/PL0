@@ -1,0 +1,20 @@
+PROGRAM EX01;
+VAR A,B,C;
+BEGIN
+  B:=8;
+  C:=2;
+  READ(A);
+  IF A<>1 THEN
+    WRITE(B)
+  ELSE
+    WRITE(C);
+  FOR;
+  DO;
+  UNTIL;
+  RETURN;
+  *=;
+  /=;
+  &;
+  ||;
+  !;
+END.

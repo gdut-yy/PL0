@@ -1,0 +1,8 @@
+PROGRAM EX01;
+VAR A,B,C;
+BEGIN
+  A:=88;
+  READ(B);
+  C=A+B*(3+B);
+  WRITE(C)
+END.

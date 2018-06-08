@@ -1,0 +1,24 @@
+{ÕýÈ··ûºÅ²âÊÔ³ÌÐò   TEST1.PL0}
+
+{ Correct Symbols }
+    { Comment }
+{abcdefghijklmnopqrstuvwxyz
+ ABCDEFGHIJKLMNOPQRSTUVWXYZ
+ 1234567890 !"#$%&'()*+,-./:;<=>?@[\]_~`}
+    { Special Symbols }
++  -  *  /  <  =  >  <=  <>  >=  :=
+(  )  [  ]  ,  .  :   ;   ..  '
+    { Numerals or char }
+0  32767  0.0  32767.123E-12  123E+12  0E0  'a'  '%'
+    { Word Symbols }
+And  array  begin  call  case  const  div  do  down  else  end  
+for  function  if  mod  not  of  or  procedure  program  
+read  record  repeat  then  to  type  until  var  while  write
+    { Names }
+Integer  boolean  char  real  false  true
+abcdefghijklmnopqrstuvwxyz0123456789
+ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789
+DNA  a12  ac  DNA  a12  ac  Dna  Ac  aC  A12
+     { ERROR }
+!  "  #  $  %  &  '  ?  @  \  _  ~
+2a  0A
