@@ -62,10 +62,10 @@
 		            WHILESYM, WRITESYM, READSYM, DOSYM, CALLSYM,
 		            CONSTSYM, VARSYM, PROCSYM, PROGSYM			
 					
-					// ↓↓↓ 新增部分 ↓↓↓
-					, ELSESYM, FORSYM, STEPSYM, UNTILSYM, RETURNSYM,	// 共5个。ELSE，FOR，STEP，UNTIL，RETURN
+			// ↓↓↓ 新增部分 ↓↓↓
+			, ELSESYM, FORSYM, STEPSYM, UNTILSYM, RETURNSYM,	// 共5个。ELSE，FOR，STEP，UNTIL，RETURN
 	                TIMESBECOMES, SLASHBECOMES, ANDSYM, ORSYM, NOTSYM	// 共5个。*=，/=，&，||，！
-					// ↑↑↑ 新增部分 ↑↑↑
+			// ↑↑↑ 新增部分 ↑↑↑
 	        } SYMBOL;
 	char *SYMOUT[] = {"NUL", "IDENT", "NUMBER", "PLUS", "MINUS", "TIMES",
 		    "SLASH", "ODDSYM", "EQL", "NEQ", "LSS", "LEQ", "GTR", "GEQ",
@@ -74,11 +74,11 @@
 		    "WHILESYM", "WRITESYM", "READSYM", "DOSYM", "CALLSYM",
 		    "CONSTSYM", "VARSYM", "PROCSYM", "PROGSYM" 
 			
-			// ↓↓↓ 新增部分 ↓↓↓
-			, "ELSESYM", "FORSYM", "STEPSYM", "UNTILSYM", "RETURNSYM",	// 共5个。ELSE，FOR，STEP，UNTIL，RETURN
+		// ↓↓↓ 新增部分 ↓↓↓
+		, "ELSESYM", "FORSYM", "STEPSYM", "UNTILSYM", "RETURNSYM",	// 共5个。ELSE，FOR，STEP，UNTIL，RETURN
 	        "TIMESBECOMES", "SLASHBECOMES", "ANDSYM", "ORSYM", "NOTSYM"	// 共5个。*=，/=，&，||，！
-			// ↑↑↑ 新增部分 ↑↑↑		
-			};
+		// ↑↑↑ 新增部分 ↑↑↑		
+		};
 
 
 **2.将新增的保留字按照字母表升序的方式添加，运算符参照已有的运算符来进行添加，注意好符号与SYM的对应。具体实现的语句如下所示：** 
@@ -270,7 +270,7 @@
 				else SYM=GTR;
 	          }
 			  
-		// ↓↓↓ 新增部分 ↓↓↓	
+	// ↓↓↓ 新增部分 ↓↓↓	
 	    else if(CH=='*') {		// 运算符 *=
 	        GetCh();
 	        if(CH=='=') { SYM=TIMESBECOMES; GetCh(); }
@@ -290,7 +290,7 @@
 	        GetCh();
 	        SYM=NOTSYM;
 	    }    
-		// ↑↑↑ 新增部分 ↑↑↑
+	// ↑↑↑ 新增部分 ↑↑↑
 		
 			  else { SYM=SSYM[CH]; GetCh(); }
 	} /*GetSym()*/
@@ -488,9 +488,9 @@
 			CODE[CX2].A=CX;
 			break;
 			
-		// ↓↓↓ 新增部分 ↓↓↓		
-		// 用来检验保留字是否添加成功的标志
-		case FORSYM:
+	// ↓↓↓ 新增部分 ↓↓↓		
+	// 用来检验保留字是否添加成功的标志
+	    case FORSYM:
 	        GetSym();
 	        Form1->printfs("保留字：FORSYM~~~~");
 	        break;
@@ -511,7 +511,7 @@
 	        Form1->printfs("保留字：DOSYM~~~~");
 	        break;
 			
-		// 用来检验运算符是否添加成功的标志。
+	// 用来检验运算符是否添加成功的标志。
 	    case TIMESBECOMES:
 	        GetSym();
 	        Form1->printfs("运算符：*= ~~~~");
@@ -532,7 +532,7 @@
 	        GetSym();
 	        Form1->printfs("运算符：!  ~~~~");
 	        break;
-		// ↑↑↑ 新增部分 ↑↑↑	
+	// ↑↑↑ 新增部分 ↑↑↑	
 	  }
 	  TEST(FSYS,SymSetNULL(),19);
 	} /*STATEMENT*/
@@ -556,7 +556,7 @@
 修改后：
 
 	const  AL    =  10;  /* LENGTH OF IDENTIFIERS */
-	const  NORW  =  14;  /* # OF RESERVED WORDS */
+	const  NORW  =  19;  /* # OF RESERVED WORDS */
 	const  TXMAX = 100;  /* LENGTH OF IDENTIFIER TABLE */
 	const  NMAX  =  14;  /* MAX NUMBER OF DEGITS IN NUMBERS */
 	const  AMAX  =2047;  /* MAXIMUM ADDRESS */
