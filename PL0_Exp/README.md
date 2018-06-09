@@ -125,7 +125,7 @@
 	  strcpy(KWORD[11],"PROGRAM");
 	  strcpy(KWORD[12],"READ");
 	  strcpy(KWORD[13],"RETURN");   // 增加保留字5。 RETURN
-	  strcpy(KWORD[14],"STEP");		// 增加保留字3。 STEP
+	  strcpy(KWORD[14],"STEP");	// 增加保留字3。 STEP
 	  strcpy(KWORD[15],"THEN");
 	  strcpy(KWORD[16],"UNTIL");	// 增加保留字4。 UNTIL
 	  strcpy(KWORD[17],"VAR");
@@ -139,16 +139,16 @@
 	  WSYM[ 4]=DOSYM;
 	  WSYM[ 5]=ELSESYM;		// 增加保留字符号1。 ELSESYM
 	  WSYM[ 6]=ENDSYM;
-	  WSYM[ 7]=FORSYM;      // 增加保留字符号2。 FORSYM
+	  WSYM[ 7]=FORSYM;      	// 增加保留字符号2。 FORSYM
 	  WSYM[ 8]=IFSYM;
 	  WSYM[ 9]=ODDSYM;
 	  WSYM[10]=PROCSYM;
 	  WSYM[11]=PROGSYM;
 	  WSYM[12]=READSYM;
-	  WSYM[13]=RETURNSYM;   // 增加保留字符号5。 RETURNSYM
-	  WSYM[14]=STEPSYM;     // 增加保留字符号3。 STEPSYM
+	  WSYM[13]=RETURNSYM;   	// 增加保留字符号5。 RETURNSYM
+	  WSYM[14]=STEPSYM;     	// 增加保留字符号3。 STEPSYM
 	  WSYM[15]=THENSYM;
-	  WSYM[16]=UNTILSYM;    // 增加保留字符号4。 UNTILSYM
+	  WSYM[16]=UNTILSYM;    	// 增加保留字符号4。 UNTILSYM
 	  WSYM[17]=VARSYM;
 	  WSYM[18]=WHILESYM;
 	  WSYM[19]=WRITESYM;
@@ -641,9 +641,10 @@
 			if (SYM==THENSYM) GetSym();
 			else Error(16);
 			CX1=CX;  GEN(JPC,0,0);		
-			STATEMENT(FSYS,LEV,TX);  // CODE[CX1].A=CX; 注释掉
+			// STATEMENT(FSYS,LEV,TX);  CODE[CX1].A=CX; 注释掉
 			
-	        // ↓↓↓ 新增部分 ↓↓↓	       
+	        // ↓↓↓ 新增部分 ↓↓↓
+		STATEMENT(SymSetUnion(SymSetNew(ELSESYM),FSYS),LEV,TX);	
 	        if(SYM!=ELSESYM)
 	            CODE[CX1].A=CX;
 	        else {
