@@ -1,8 +1,20 @@
 PROGRAM EX01;
 VAR A,B,C;
 BEGIN
-  A:=88;
-  READ(B);
-  C=A+B*(3+B);
-  WRITE(C)
+  B:=8;
+  C:=2;
+  READ(A);
+  IF A<>1 THEN
+    WRITE(B)
+  ELSE
+    WRITE(C);
+  FOR;
+  DO;
+  UNTIL;
+  RETURN;
+  *=;
+  /=;
+  &;
+  ||;
+  !;
 END.

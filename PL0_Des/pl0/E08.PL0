@@ -1,0 +1,8 @@
+PROGRAM EX08;
+VAR A,B,C,D,I;
+BEGIN
+  A:=10;
+  FOR I:=1 STEP 1 UNTIL 5 DO
+  A*=2;
+  WRITE(A);
+END.

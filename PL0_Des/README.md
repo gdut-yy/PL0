@@ -27,6 +27,35 @@
 
 ## 主要成分描述
 
+### 指令表
+
+| 指令 | 说明 |
+|:-:| - |
+| CAL L A | 调用地址为 A 的过程（置指令地址寄存器为A）；L 为调用过程与被调用过程的层差；设置被调用过程的3 个联系单元 |
+| INT 0 A | 在栈顶开辟 A 个存储单元，服务于被调用的过程;A 等于该过程的局部变量数加 3;3 个特殊的联系单元 |
+| JMP 0 A | 无条件转移至地址 A，即置指令地址寄存器为A |
+| JPC 0 A | 条件转移指令；若栈顶为 0，则转移至地址 A，即置指令地址寄存器为A ；T 减1 |
+| LIT 0 A | 立即数存入栈顶，即置T 所指存储单元的值为Al； T 加 1 |
+| LOD L A | 将层差为L、偏移量为A的存储单元的值取到栈顶； T 加 1 |
+| OPR 0 0 | 过程调用结束后,返回调用点并退栈； 重置基址寄存器和栈顶寄存器 |
+| OPR 0 1 | 求栈顶元素的相反数，结果值留在栈顶 |
+| OPR 0 2 | 次栈顶与栈顶的值相加，结果存入次栈顶； T 减 1 |
+| OPR 0 3 | 次栈顶的值减去栈顶的值，结果存入次栈顶； T 减 1 |
+| OPR 0 4 | 次栈顶的值乘以栈顶的值，结果存入次栈顶； T 减 1 |
+| OPR 0 5 | 次栈顶的值除以栈顶的值，结果存入次栈顶； T 减 1 |
+| OPR 0 6 | 栈顶元素的奇偶判断，若为奇数，结果为1；若为偶数，结果为0 ；结果值留在栈顶 |
+| OPR 0 8 | 比较次栈顶与栈顶是否相等；若相等，结果为0；存结果至次栈顶；T 减1 |
+| OPR 0 9 | 比较次栈顶与栈顶是否不相等；若不相等，结果为0；存结果至次栈顶；T 减1 |
+| OPR 0 10 | 比较次栈顶是否小于栈顶； 若小于，结果为0；存结果至次栈顶；T 减1 |
+| OPR 0 11 | 比较次栈顶是否大于等于栈顶； 若大于等于，结果为0；存结果至次栈顶；T 减1 |
+| OPR 0 12 | 比较次栈顶是否大于栈顶； 若大于，结果为0；存结果至次栈顶；T 减1 |
+| OPR 0 13 | 比较次栈顶是否小于等于栈顶； 若小于等于，结果为0；存结果至次栈顶；T 减1 |
+| OPR 0 14 | 栈顶的值输出至控制台屏幕； T  减 1 |
+| OPR 0 15 | 控制台屏幕输出一个换行 |
+| OPR 0 16 | 从控制台读入一行输入，置入栈顶； T 加 1 |
+| STO L A | T 减 1； 将栈顶的值存入层差为L、偏移量为A的存储单元 |
+
+
 
 ## 测试用例
 
@@ -85,3 +114,75 @@
 	  TEST(FSYS,SymSetNULL(),8);
 	  ListCode(CX0);
 	} /*Block*/
+
+## 
+
+修改前：
+
+	case IDENT:
+			i=POSITION(ID,TX);
+			if (i==0) Error(11);
+			else
+			  if (TABLE[i].KIND!=VARIABLE) { /*ASSIGNMENT TO NON-VARIABLE*/
+				Error(12); i=0;
+			  }
+	        GetSym();
+			if (SYM==BECOMES) GetSym();
+			else Error(13);
+			EXPRESSION(FSYS,LEV,TX);
+			if (i!=0) GEN(STO,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
+			break;
+
+修改后：
+
+
+修改前：
+
+	// ↓↓↓ 新增部分 ↓↓↓		
+	// 用来检验保留字是否添加成功的标志
+	case FORSYM:
+        GetSym();
+        Form1->printfs("保留字：FORSYM~~~~");
+        break;
+    case STEPSYM:
+        GetSym();
+        Form1->printfs("保留字：STEPSYM~~~~");
+        break;
+    case UNTILSYM:
+        GetSym();
+        Form1->printfs("保留字：UNTILSYM~~~~");
+        break;
+    case RETURNSYM:
+        GetSym();
+        Form1->printfs("保留字：RETURNSYM~~~~");
+        break;
+    case DOSYM:
+        GetSym();
+        Form1->printfs("保留字：DOSYM~~~~");
+        break;
+		
+	// 用来检验运算符是否添加成功的标志。
+    case TIMESBECOMES:
+        GetSym();
+        Form1->printfs("运算符：*= ~~~~");
+        break;
+    case SLASHBECOMES:
+        GetSym();
+        Form1->printfs("运算符：/= ~~~~");
+        break;
+    case ANDSYM:
+        GetSym();
+        Form1->printfs("运算符：&  ~~~~");
+        break;
+    case ORSYM:
+        GetSym();
+        Form1->printfs("运算符：|| ~~~~");
+        break;
+    case NOTSYM:
+        GetSym();
+        Form1->printfs("运算符：!  ~~~~");
+        break;
+	// ↑↑↑ 新增部分 ↑↑↑	
+
+修改后：
+
