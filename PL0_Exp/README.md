@@ -17,7 +17,11 @@
 
 ## 三、结构流程
 
+### （1）PL/0 语言编译器 
 
+PL/0语言可看成是PASCAL语言的子集，它的编译程序是一个编译解释执行系统。PL/0的目标程序为假想栈式计算机的汇编语言，与具体计算机无关。
+
+![](jiegou.png)
 
 ## 四、实验过程
 
@@ -588,7 +592,7 @@
 	SSYM['*']=TIMES;     SSYM['/']=SLASH;
 	SSYM['(']=LPAREN;    SSYM[')']=RPAREN;
 	SSYM['=']=EQL;       SSYM[',']=COMMA;
-	SSYM['.']=PERIOD;    // SSYM['#']=NEQ;	注释掉
+	SSYM['.']=PERIOD;    SSYM['#']=NEQ;
 	SSYM[';']=SEMICOLON;
 	SSYM['&']=ANDSYM;     // 新增符号。 &
 	SSYM['!']=NOTSYM;     // 新增符号。 !
@@ -621,6 +625,17 @@
 			}
 
 ### （三）增加条件语句的ELSE子句，要求：写出相关文法，语法描述图，语义描述图。
+
+#### 1、相关文法规则
+
+	G(S): S→if S else S | if S | a 
+#### 2、语法描述图
+
+![](yuf.png)
+
+#### 3、语义描述图
+
+
 
 修改前：
 
@@ -686,6 +701,75 @@
 
 ## 六、实验结果
 
-![](result01.png)
+### 1、结果截图
+
+![](qtresult01.png)
+![](qtresult02.png)
+![](qtresult03.png)
+![](qtresult04.png)
+
+### 2、COD 文件内容
+	
+	=== COMPILE PL0 ===
+	  0 PROGRAM EX01; 
+	  0 VAR A,B,C; 
+	  1 BEGIN 
+	  2   B:=8; 
+	  4   C:=2; 
+	  6   READ(A); 
+	  8   IF A<>1 THEN 
+	 11     WRITE(B) 
+	 14   ELSE 
+	 15     WRITE(C); 
+	 19   FOR; 
+	 19   DO; 
+	 19   UNTIL; 
+	 19   RETURN; 
+	 19   *=; 
+	 19   /=; 
+	 19   &; 
+	 19   ||; 
+	 19   !; 
+	 19 END. 
+	  0 JMP 0 1
+	  1 INI 0 6
+	  2 LIT 0 8
+	  3 STO 0 4
+	  4 LIT 0 2
+	  5 STO 0 5
+	  6 OPR 0 16
+	  7 STO 0 3
+	  8 LOD 0 3
+	  9 LIT 0 1
+	 10 OPR 0 9
+	 11 JPC 0 16
+	 12 LOD 0 4
+	 13 OPR 0 14
+	 14 OPR 0 15
+	 15 JMP 0 19
+	 16 LOD 0 5
+	 17 OPR 0 14
+	 18 OPR 0 15
+	 19 OPR 0 0
+	~~~ RUN PL0 ~~~
+	? 3
+	8
+	~~~ END PL0 ~~~
 
 ## 七、心得体会
+
+总的来说，课内实验 部分还是让我获益匪浅的。通过 “PL0编译器扩充” 这个实验 让我对编译原理这门课程有了更深刻的了解，增进了对 PL0  程序编译过程的理解，包括如何进行词法分析，语法分析，语义分析等过程等。平日里看起来非常普通的编译器其实背后隐藏着很多知识。
+
+对于实验内容来说，增添保留字和运算符以及修改单词是很基本的操作。只要明白词法分析的过程就很容易完成，对于ELSE语句的添加，更多的是体现在ELSE语句体的语义分析上面，这个需要我们对语义衔接跳转回调的理解。
+
+刚开始做实验的时候，其实是比较难受的。在 Windows 10 早已普及的今天，我发现 Windows 10 并不兼容 Borland C++Builder 6 这个编译器。而老师给的 PL0编译器源码 只能在 Borland C++Builder 6 上运行。无奈一开始只能在实验室里做，但实验课的时间是远远不够的，于是我后来在 Windows 10 平台上装了 Windows 7 的虚拟机，安装了Borland C++Builder 6，终于把 PL0编译器 跑了起来。
+
+但实际上 Borland C++Builder 6 这个编译器 并不好用，并且官方已经不再对其进行维护了，另外，PL0编译器的原代码 的多处 “迷之缩进” 使我在看懂逻辑上花了大量时间。最后实在忍受不了，只好用了一个下午的时间使用 Qt 写了个 PL0编译器的高仿重制版。除了重写了 GUI 和修复了几个小 BUG 以外，尽最大力度保持了与源码的一致。
+
+某种程度上多折腾也是好事，能学到不少东西。
+
+## 八、附录：源代码
+
+Borland C++Builder 6 版本_源码：[https://github.com/gdut-yy/PL0/tree/master/PL0_Exp](https://github.com/gdut-yy/PL0/tree/master/PL0_Exp)
+
+Qt 版本_源码：[https://github.com/gdut-yy/PL0_Qt](https://github.com/gdut-yy/PL0_Qt)
