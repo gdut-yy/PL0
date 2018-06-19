@@ -1,0 +1,16 @@
+PROGRAM DE01;
+VAR A,B,C,D;
+BEGIN
+  A:=16;
+  A/=2;
+  WRITE(A);
+  B:=4;
+  B*=2;
+  WRITE(B);
+  C:=6;
+  C+=2;
+  WRITE(C);
+  D:=10;
+  D-=2;
+  WRITE(D);
+END.

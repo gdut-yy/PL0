@@ -1,0 +1,11 @@
+PROGRAM DE03;
+VAR A,B,C,I;
+BEGIN
+  C:=4;
+  READ(A);
+  READ(B);
+  FOR I:=A+1 STEP B+2 UNTIL 12 DO
+  BEGIN
+    WRITE(C*I)
+  END;
+END.

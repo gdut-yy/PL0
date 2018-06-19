@@ -1,0 +1,13 @@
+PROGRAM DE03;
+VAR A,B,C;
+BEGIN
+  A:=88;
+  READ(B);
+  ++A;
+  WRITE(A);
+  --A;
+  WRITE(A);
+  C:=A+B*(3+B);
+  WRITE(C++);
+  WRITE(C--);
+END.

@@ -41,7 +41,7 @@ PL/0语言可看成是PASCAL语言的子集，它的编译程序是一个编译�
 | - | - | - | - | - | - |
 | SYM表示 | IMESBECOMES | SLASHBECOMES | ANDSYM | ORSYM | NOTSYM |
 
-修改前：（原代码 line 19 ~ line 31）
+修改前：（原 Unit1.cpp 文件 line 19 ~ line 31）
 
 	typedef enum  { NUL, IDENT, NUMBER, PLUS, MINUS, TIMES,
 		            SLASH, ODDSYM, EQL, NEQ, LSS, LEQ, GTR, GEQ,
@@ -629,9 +629,10 @@ PL/0语言可看成是PASCAL语言的子集，它的编译程序是一个编译�
 #### 1、相关文法规则
 
 	G(S): S→if S else S | if S | a 
+
 #### 2、语法描述图
 
-![](yuf.png)
+![](yufa.png)
 
 #### 3、语义描述图
 
