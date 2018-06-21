@@ -1,7 +1,0 @@
-PROGRAM EX01;
-VAR A,B;
-BEGIN
-  A:=88;
-  B:=11;
-  WRITE(A);
-END.

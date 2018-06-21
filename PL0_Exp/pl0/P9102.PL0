@@ -1,8 +1,0 @@
-PROGRAM MAIN;
-VAR A,B,C;
-BEGIN
-  A:=100;
-  B:=200;
-  C:=300;
-  A:=C+(B-A);
-END.

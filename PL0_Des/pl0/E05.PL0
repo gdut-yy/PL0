@@ -1,8 +1,0 @@
-PROGRAM EX05;
-VAR A,B;
-BEGIN
-  READ(A);
-  READ(B);
-  A/=B;
-  WRITE(A);
-END.

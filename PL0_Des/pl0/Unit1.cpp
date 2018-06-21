@@ -16,7 +16,7 @@ const  AMAX  =2047;  /* MAXIMUM ADDRESS */
 const  LEVMAX=   3;  /* MAX DEPTH OF BLOCK NESTING */
 const  CXMAX = 200;  /* SIZE OF CODE ARRAY */
 
-const int SYMNUM = 43; //保留字个数
+const int SYMNUM = 47; //保留字个数
 
 typedef enum  { NUL, IDENT, NUMBER, PLUS, MINUS, TIMES,
 	            SLASH, ODDSYM, EQL, NEQ, LSS, LEQ, GTR, GEQ,
@@ -26,9 +26,10 @@ typedef enum  { NUL, IDENT, NUMBER, PLUS, MINUS, TIMES,
 	            CONSTSYM, VARSYM, PROCSYM, PROGSYM			
 				
 				// ↓↓↓ 新增部分 ↓↓↓
-				, ELSESYM, FORSYM, STEPSYM, UNTILSYM, RETURNSYM,	// 共5个。ELSE，FOR，STEP，UNTIL，RETURN
+                , ELSESYM, FORSYM, STEPSYM, UNTILSYM, RETURNSYM,	// 共5个。ELSE，FOR，STEP，UNTIL，RETURN
                 TIMESBECOMES, SLASHBECOMES, ANDSYM, ORSYM, NOTSYM	// 共5个。*=，/=，&，||，！
-				// ↑↑↑ 新增部分 ↑↑↑
+                , PLUSBECOMES, MINUSBECOMES, INCSYM, DECSYM         // 共4个。+=，-+，++，--
+                // ↑↑↑ 新增部分 ↑↑↑
         } SYMBOL;
 char *SYMOUT[] = {"NUL", "IDENT", "NUMBER", "PLUS", "MINUS", "TIMES",
 	    "SLASH", "ODDSYM", "EQL", "NEQ", "LSS", "LEQ", "GTR", "GEQ",
@@ -38,9 +39,10 @@ char *SYMOUT[] = {"NUL", "IDENT", "NUMBER", "PLUS", "MINUS", "TIMES",
 	    "CONSTSYM", "VARSYM", "PROCSYM", "PROGSYM" 
 		
 		// ↓↓↓ 新增部分 ↓↓↓
-		, "ELSESYM", "FORSYM", "STEPSYM", "UNTILSYM", "RETURNSYM",	// 共5个。ELSE，FOR，STEP，UNTIL，RETURN
+        , "ELSESYM", "FORSYM", "STEPSYM", "UNTILSYM", "RETURNSYM",	// 共5个。ELSE，FOR，STEP，UNTIL，RETURN
         "TIMESBECOMES", "SLASHBECOMES", "ANDSYM", "ORSYM", "NOTSYM"	// 共5个。*=，/=，&，||，！
-		// ↑↑↑ 新增部分 ↑↑↑		
+        , "PLUSBECOMES", "MINUSBECOMES", "INCSYM", "DECSYM"         // 共4个。+=，-+，++，--
+        // ↑↑↑ 新增部分 ↑↑↑	
 		};
 typedef  int *SYMSET; // SET OF SYMBOL;
 typedef  char ALFA[11];
@@ -246,27 +248,71 @@ void GetSym() {
 			else SYM=GTR;
           }
 		  
-	// ↓↓↓ 新增部分 ↓↓↓	
-    else if(CH=='*') {		// 运算符 *=
+	// ↓↓↓ 新增部分 ↓↓↓
+    else if(CH=='*') {		
         GetCh();
-        if(CH=='=') { SYM=TIMESBECOMES; GetCh(); }
+        if(CH=='=') {           // 运算符 '*='
+            SYM=TIMESBECOMES; GetCh(); 
+        }
         else SYM=TIMES;
-    } else if(CH=='/') {	// 运算符 /=
+    } else if(CH=='/') {	
         GetCh();
-        if(CH=='=') { SYM=SLASHBECOMES; GetCh(); }
+        if(CH=='=') {           // 运算符 '/='
+            SYM=SLASHBECOMES; GetCh(); 
+        }
+        else if(CH=='*'){       // '/* */' 多行注释
+            GetCh();
+            i=CH;
+            while (i!='*' || CH!='/') {
+                i=CH;
+                GetCh();
+            }
+            if(i!='*' && CH!='/') Error(19);
+            else{
+                GetCh();
+                GetSym();
+            }
+        }
+        else if(CH=='/'){       // '//' 单行注释
+            i=CX;
+            while (CC!=LL) {
+                GetCh();
+            }
+            GetSym();
+        }
         else SYM=SLASH;
-    } else if(CH=='&') {	// 运算符 &
+    } else if(CH=='+') {    
+        GetCh();
+        if(CH=='=') {           // 运算符 '+='
+            SYM=PLUSBECOMES; GetCh(); 
+        }
+        else if(CH=='+') {      // 运算符 '++'
+            SYM=INCSYM; GetCh();
+        }
+        else SYM=PLUS;
+    } else if(CH=='-') {
+        GetCh();
+        if(CH=='=') {           // 运算符 '-='
+            SYM=MINUSBECOMES; GetCh(); 
+        }
+        else if(CH=='-') {      // 运算符 '--'
+            SYM=DECSYM; GetCh();
+        }
+        else SYM=MINUS;
+    } else if(CH=='&') {        // 运算符 '&'
         GetCh();
         SYM=ANDSYM;
-    } else if(CH=='|') {	// 运算符 ||
+    } else if(CH=='|') {	
         GetCh();
-        if(CH=='|') { SYM=ORSYM; GetCh(); }
+        if(CH=='|') {           // 运算符 '||'
+            SYM=ORSYM; GetCh(); 
+        }
         else Error(19);
-    } else if(CH=='!') {	// 运算符 !
+    } else if(CH=='!') {        // 运算符 '!'
         GetCh();
         SYM=NOTSYM;
-    }    
-	// ↑↑↑ 新增部分 ↑↑↑
+    }
+    // ↑↑↑ 新增部分 ↑↑↑
 	
 		  else { SYM=SSYM[CH]; GetCh(); }
 } /*GetSym()*/
@@ -357,6 +403,29 @@ void FACTOR(SYMSET FSYS, int LEV, int &TX) {
 		  case PROCEDUR: Error(21); break;
 		}
 	  GetSym();
+	  
+	// ↓↓↓ 新增部分 ↓↓↓
+    // 因子中的 i++ 和 i-- 运算 实现
+    if(SYM==INCSYM||SYM==DECSYM){       
+        GEN(LIT,0,1);                   // 将常数 1 放入栈顶
+        if(SYM==INCSYM){                // i++ 
+            GEN(OPR,0,2);               // 次栈顶 = 次栈顶 + 栈顶
+            GEN(STO,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);     // 将栈顶送入变量单元
+            GEN(LOD,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);     // 将变量送入栈顶
+            // 加了 1 的减去 1
+            GEN(LIT,0,1);
+            GEN(OPR,0,3);
+        }else if(SYM==DECSYM){          // i-- 
+            GEN(OPR,0,3);               // 次栈顶 = 次栈顶 - 栈顶
+            GEN(STO,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);     // 将栈顶送入变量单元
+            GEN(LOD,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);     // 将变量送入栈顶
+            // 减了 1 的加上 1
+            GEN(LIT,0,1);
+            GEN(OPR,0,2);
+        }
+        GetSym();
+    }
+        // ↑↑↑ 新增部分 ↑↑↑
 	}
 	else
 	  if (SYM==NUMBER) {
@@ -386,11 +455,56 @@ void TERM(SYMSET FSYS, int LEV, int &TX) {  /*TERM*/
 //---------------------------------------------------------------------------
 void EXPRESSION(SYMSET FSYS, int LEV, int &TX) {
   SYMBOL ADDOP;
+  int i;    // 新增 int i;
   if (SYM==PLUS || SYM==MINUS) {
     ADDOP=SYM; GetSym();
     TERM(SymSetUnion(FSYS,SymSetNew(PLUS,MINUS)),LEV,TX);
     if (ADDOP==MINUS) GEN(OPR,0,1);
   }
+  
+   // ↓↓↓ 新增部分 ↓↓↓
+  else if(SYM==INCSYM){     // ++i
+      GetSym();
+      if(SYM==IDENT){
+          i=POSITION(ID,TX);
+          if(i==0) Error(11);
+          else if(TABLE[i].KIND!=VARIABLE){
+              Error(12);
+              i=0;
+          }
+          if(i!=0) GEN(LOD,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
+          GEN(LIT,0,1);
+          GEN(OPR,0,2);
+          if(i!=0){
+              GEN(STO,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
+              GEN(LOD,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
+          }
+          GetSym();
+      }
+      else Error(45);
+  }
+  else if(SYM==DECSYM){     // --i
+      GetSym();
+      if(SYM==IDENT){
+          i=POSITION(ID,TX);
+          if(i==0) Error(11);
+          else if(TABLE[i].KIND!=VARIABLE){
+              Error(12);
+              i=0;
+          }
+          if(i!=0) GEN(LOD,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
+          GEN(LIT,0,1);
+          GEN(OPR,0,3);
+          if(i!=0){
+              GEN(STO,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
+              GEN(LOD,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
+          }
+          GetSym();
+      }
+      else Error(45);
+  }
+  // ↑↑↑ 新增部分 ↑↑↑
+  
   else TERM(SymSetUnion(FSYS,SymSetNew(PLUS,MINUS)),LEV,TX);
   while (SYM==PLUS || SYM==MINUS) {
     ADDOP=SYM; GetSym();
@@ -437,27 +551,59 @@ void STATEMENT(SYMSET FSYS,int LEV,int &TX) {   /*STATEMENT*/
 		// if (i!=0) GEN(STO,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
 		
 		// ↓↓↓ 新增部分 ↓↓↓
-		if (SYM==BECOMES) {
-			GetSym();
-			EXPRESSION(FSYS,LEV,TX);
-			if (i!=0) GEN(STO,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
-		}
-		else if(SYM==TIMESBECOMES) {
-			GEN(LOD,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
-			GetSym();
-			EXPRESSION(FSYS,LEV,TX);
-			GEN(OPR,0,4);
-			if (i!=0) GEN(STO,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
-		}
-		else if(SYM==SLASHBECOMES) {
-			GEN(LOD,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
-			GetSym();
-			EXPRESSION(FSYS,LEV,TX);
-			GEN(OPR,0,5);
-			if (i!=0) GEN(STO,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
-		}
-		else Error(13);
-		// ↑↑↑ 新增部分 ↑↑↑	
+    if (SYM==BECOMES) {
+        GetSym();
+        EXPRESSION(FSYS,LEV,TX);
+        if (i!=0) GEN(STO,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
+    }
+    else if(SYM==TIMESBECOMES) {    // *= 逻辑运算
+        GEN(LOD,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
+        GetSym();
+        EXPRESSION(FSYS,LEV,TX);
+        GEN(OPR,0,4);
+        if (i!=0) GEN(STO,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
+    }
+    else if(SYM==SLASHBECOMES) {    // /= 逻辑运算
+        GEN(LOD,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
+        GetSym();
+        EXPRESSION(FSYS,LEV,TX);
+        GEN(OPR,0,5);
+        if (i!=0) GEN(STO,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
+    }
+    else if(SYM==PLUSBECOMES) {    // += 逻辑运算
+        GEN(LOD,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
+        GetSym();
+        EXPRESSION(FSYS,LEV,TX);
+        GEN(OPR,0,2);
+        if (i!=0) GEN(STO,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
+    }
+    else if(SYM==MINUSBECOMES) {    // -= 逻辑运算
+        GEN(LOD,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
+        GetSym();
+        EXPRESSION(FSYS,LEV,TX);
+        GEN(OPR,0,3);
+        if (i!=0) GEN(STO,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
+    }
+	else if(SYM==INCSYM) {          // i++ 逻辑运算
+        if(i!=0)
+            GEN(LOD,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
+        GEN(LIT,0,1);
+        GEN(OPR,0,2);
+        if(i!=0)
+            GEN(STO,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
+        GetSym();
+    }
+    else if(SYM==DECSYM) {          // i-- 逻辑运算
+        if(i!=0)
+            GEN(LOD,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
+        GEN(LIT,0,1);
+        GEN(OPR,0,3);
+        if(i!=0)
+            GEN(STO,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
+        GetSym();
+    }
+    else Error(13);
+    // ↑↑↑ 新增部分 ↑↑↑
 		
 		break;
 	case READSYM:
@@ -551,138 +697,86 @@ void STATEMENT(SYMSET FSYS,int LEV,int &TX) {   /*STATEMENT*/
 		CODE[CX2].A=CX;
 		break;
 		
-	// ↓↓↓ 新增部分 ↓↓↓		
-	// FOR循环
-	// case FORSYM:
-                // GetSym();
-				// if(SYM!=IDENT) Error(47);
-				// else
-					// i= POSITION(ID,TX);
-				// if(i==0) Error(11);
-				// else if(TABLE[i].KIND!=VARIABLE){
-					// Error(12);
-					// i=0;
-				// }
-				
-				// GetSym();
-				// if(SYM==BECOMES) 
-					// GetSym();
-				// else
-					// Error(13);
-					
-				// EXPRESSION(SymSetUnion(SymSetNew(STEPSYM),FSYS),LEV,TX); 
-				// if(i!=0)
-					// GEN(STO,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR); 
-				// if(SYM==STEPSYM)
-					// GetSym();
-				// else
-					// Error(46);
-				// CX1=CX;
-				// GEN(JMP,0,0);
-				// CX3=CX;
-						
-				// EXPRESSION(SymSetUnion(SymSetNew(UNTILSYM),FSYS),LEV,TX);
-				// GEN(LOD,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
-				// GEN(OPR,0,2);
-				// GEN(LOD,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
-				// if(SYM==UNTILSYM) 
-					// GetSym();
-				// else Error(47);
-							
-				// CODE[CX1].A=CX;
-				// EXPRESSION(SymSetUnion(SymSetNew(DOSYM),FSYS),LEV,TX); 
-				// GEN(LOD,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
-				// GEN(OPR,0,11);
-				// CX2=CX;
-				// GEN(JMP,0,0);
-				
-				// if(SYM==DOSYM)
-					// GetSym();
-				// else
-					// Error(48);
-				// STATEMENT(FSYS, LEV, TX);
-				// GEN(JMP,0,CX3);
-				// CODE[CX2].A=CX;
-								
-                // break;
-	case FORSYM:
-                GetSym();
-				if(SYM!=IDENT) Error(13);
-				else{
-					i= POSITION(ID,TX);
-					if(i==0) Error(11);
-					else if(TABLE[i].KIND!=VARIABLE){
-						Error(12);
-						i=0;
-					}
-				
-					GetSym();
-					if(SYM!=BECOMES) Error(13); 
-					else {
-						GetSym();
-						EXPRESSION(SymSetUnion(SymSetNew(UNTILSYM,STEPSYM,DOSYM),FSYS),LEV,TX); 
-						if(i!=0)
-							GEN(STO,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR); 
-						CX1=CX;
-						GEN(JMP,0,0);
-						CX2=CX;
-						
-						if(SYM!=STEPSYM) Error(19);
-						else{
-							GetSym();
-							EXPRESSION(SymSetUnion(SymSetNew(UNTILSYM,STEPSYM,DOSYM),FSYS),LEV,TX);
-							GEN(LOD,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
-							GEN(OPR,0,2);
-							GEN(LOD,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
-							
-							if(SYM!=UNTILSYM) Error(19);
-							else{
-								CODE[CX1].A=CX;
-								GetSym();
-								
-								EXPRESSION(SymSetUnion(SymSetNew(UNTILSYM,STEPSYM,DOSYM),FSYS),LEV,TX);
-								GEN(LOD,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
-								GEN(OPR,0,12);
-								CX3=CX;
-								GEN(JPC,0,0);
-								
-								if(SYM==DOSYM){
-									GetSym();
-									STATEMENT(FSYS, LEV, TX);
-									GEN(JMP,0,CX2);
-									CODE[CX3].A=CX;
-								}
-								else Error(19);
-							}
-						}
-					}
-				}
-											
-                break;
-				
-	// case FORSYM:
-                // GetSym();
-                // STATEMENT(SymSetUnion(SymSetNew(STEPSYM),FSYS),LEV,TX); //处理for后面的赋值语句
-                // CX3=CX; GEN(JMP,0,0);  //用于第一次执行for语句时跳过step语句
-                // CX1=CX; //记录step后语句的代码位置
-                // if(SYM==STEPSYM) {
-                        // GetSym();
-                        // STATEMENT(SymSetUnion(SymSetNew(UNTILSYM),FSYS),LEV,TX); //处理step后面的语句
-                // } else Error(8);
-                // if(SYM==UNTILSYM) {
-                        // CODE[CX3].A=CX;  //回填第一次进入for循环时的直接跳转地址
-                        // GetSym();
-                // } else Error(8);
-                // CONDITION(SymSetAdd(DOSYM, FSYS),LEV,TX);   //处理条件语句
-                // if(SYM==DOSYM) {
-                        // GetSym();
-                // } else Error(8);
-                // CX2=CX;  GEN(JPC,0,0);  //条件跳转，栈顶若为非真，则跳转到参数三位置，该位置待回填
-                // STATEMENT(FSYS,LEV,TX); //处理do后面内容
-                // GEN(JMP,0,CX1);  //执行完for语句内的语句则重新跳回step处
-                // CODE[CX2].A=CX; //回填条件跳转
-                // break;
-	// ↑↑↑ 新增部分 ↑↑↑	
+	// ↓↓↓ 新增部分 ↓↓↓
+// 扩充语句。FOR <变量>:=<表达式>STEP<表达式>UNTIL<表达式>Do<语句> ；
+case FORSYM:
+    GetSym();
+    if(SYM!=IDENT) Error(47);
+    else i=POSITION(ID,TX);
+    if(i==0) Error(11);
+    else if(TABLE[i].KIND!=VARIABLE){
+        Error(12); i=0;
+    }
+    GetSym();
+    if(SYM=BECOMES) GetSym();
+    else Error(13);
+    
+    EXPRESSION(SymSetUnion(SymSetNew(STEPSYM),FSYS),LEV,TX);
+    if(i!=0) GEN(STO,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
+    if(SYM==STEPSYM) GetSym();
+    else Error(46);
+    CX1=CX;
+    GEN(JMP,0,0);
+    CX3=CX;
+    
+    EXPRESSION(SymSetUnion(SymSetNew(UNTILSYM),FSYS),LEV,TX);
+    GEN(LOD,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
+    GEN(OPR,0,2);
+    GEN(STO,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
+    if(SYM==UNTILSYM) GetSym();
+    else Error(47);
+    CODE[CX1].A=CX;
+    
+    EXPRESSION(SymSetUnion(SymSetNew(DOSYM),FSYS),LEV,TX);
+    GEN(LOD,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
+    GEN(OPR,0,11);
+    CX2=CX;
+    GEN(JPC,0,0);
+    if(SYM==DOSYM) GetSym();
+    else Error(48);
+    
+    STATEMENT(FSYS,LEV,TX);
+    GEN(JMP,0,CX3);
+    CODE[CX2].A=CX;
+    break;
+	
+	// 处理 ++i
+case INCSYM:   
+    GetSym();
+    if(SYM==IDENT){
+        i=POSITION(ID,TX);
+        if(i==0) Error(11);
+        else if(TABLE[i].KIND!=VARIABLE){
+            Error(12);
+            i=0;
+        }
+        if(i!=0) GEN(LOD,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
+        GEN(LIT,0,1);
+        GEN(OPR,0,2);
+        if(i!=0) GEN(STO,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
+        GetSym();
+    }
+    else Error(45);
+    break;
+// 处理 --i
+case DECSYM: 
+    GetSym();
+    if(SYM==IDENT){
+        i=POSITION(ID,TX);
+        if(i==0) Error(11);
+        else if(TABLE[i].KIND!=VARIABLE){
+            Error(12);
+            i=0;
+        }
+        if(i!=0) GEN(LOD,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
+        GEN(LIT,0,1);
+        GEN(OPR,0,3);
+        if(i!=0) GEN(STO,LEV-TABLE[i].vp.LEVEL,TABLE[i].vp.ADR);
+        GetSym();
+    }
+    else Error(45);
+    break;
+// ↑↑↑ 新增部分 ↑↑↑
   }
   TEST(FSYS,SymSetNULL(),19);
 } /*STATEMENT*/

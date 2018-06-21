@@ -613,7 +613,7 @@ PL/0 文法描述的元语言（EBNF）符号说明
 
 再进行因子处理，对于 ++i、--i，只在 void EXPRESSION(SYMSET FSYS, int LEV, int &TX) 中处理；FACTOR部分 只处理 i++、i-- 操作。
 
-	void MainWindow::EXPRESSION(SYMSET FSYS, int LEV, int &TX) {
+	void EXPRESSION(SYMSET FSYS, int LEV, int &TX) {
 	  SYMBOL ADDOP; 
 	  int i;    // 新增 int i;
 	  if (SYM==PLUS || SYM==MINUS) {
@@ -826,9 +826,17 @@ PL/0 文法描述的元语言（EBNF）符号说明
 
 ## 八、心得体会
 
-总的来说，课内实验 部分还是让我获益匪浅的。通过 “PL0编译器扩充” 这个实验 让我对编译原理这门课程有了更深刻的了解，增进了对 PL0  程序编译过程的理解，包括如何进行词法分析，语法分析，语义分析等过程等。平日里看起来非常普通的编译器其实背后隐藏着很多知识。
+课程设计 部分让我对编译原理这门课程又有了更深刻的了解。。。
 
-对于实验内容来说，增添保留字和运算符以及修改单词是很基本的操作。只要明白词法分析的过程就很容易完成，对于ELSE语句的添加，更多的是体现在ELSE语句体的语义分析上面，这个需要我们对语义衔接跳转回调的理解。
+就课程设计的要求来说，必做部分的那两个功能实现起来并不太难。扩充赋值运算：*= 和 /= ，由于实验部分已做了运算符扩充，功能部分几行代码即可实现，在此基础上，甚至可以举二反四，一并完成 += 和 -= 的实现（尽管没有要求）。FOR 语句的实现 基于对程序的理解还有结合之前实验的 “增加了条件语句的ELSE子句” 的经验 不难做出来，百度文库有 TO 和 DOWNTO 版本的 FOR循环实现（注意不要“参考”错了）。单行和多行注释功能 功能看似复杂，但其实几行代码即可实现，在 GetSym() 函数里进行修改即可。
+
+完成以上功能再去答辩应该就比较容易获得 “良” 或 “优” 了，真正有难度的是其余几个选做功能的实现。
+
+关于 ++ 和 -- 的实现，这个涉及到 i++ 和 ++i 两种不同的处理方式，前者是先传值再加一，后者是先加一再传值。++i 比较好理解，因为是先读入 ++ 再读入变量名；而 i++ 则涉及到 对因子变量的识别问题，会有 i+A 和 i++ 的识别 bug，暂时想到 通过在 FACTOR 因子处理过程中增加识别代码进行解决。
+
+由于原程序数值只有整数类型。要实现实数型和字符型功能时，输入部分涉及到基本指令的修改，还要改变存储栈的类型，如果改了会与 FOR 发生冲突。实现起来基本上要进行大改，工作量大而且易出bug。本课程设计中没有实现，了解一下即可。
+
+关于 一维数组还有函数部分 的实现，由于没有给出相关标准格式，需要针对不同的实现对应不同的测试代码，由于强迫症加上期末考试的原因，便没有时间去实现。。
 
 刚开始做实验的时候，其实是比较难受的。在 Windows 10 早已普及的今天，我发现 Windows 10 并不兼容 Borland C++Builder 6 这个编译器。而老师给的 PL0编译器源码 只能在 Borland C++Builder 6 上运行。无奈一开始只能在实验室里做，但实验课的时间是远远不够的，于是我后来在 Windows 10 平台上装了 Windows 7 的虚拟机，安装了Borland C++Builder 6，终于把 PL0编译器 跑了起来。
 
@@ -838,6 +846,6 @@ PL/0 文法描述的元语言（EBNF）符号说明
 
 ## 九、附录：源代码
 
-Borland C++Builder 6 版本_源码：[https://github.com/gdut-yy/PL0/tree/master/PL0_Exp](https://github.com/gdut-yy/PL0/tree/master/PL0_Des)
+Borland C++Builder 6 版本_源码：[https://github.com/gdut-yy/PL0/tree/master/PL0_Des](https://github.com/gdut-yy/PL0/tree/master/PL0_Des)
 
 Qt 版本_源码：[https://github.com/gdut-yy/PL0_Qt](https://github.com/gdut-yy/PL0_Qt)
