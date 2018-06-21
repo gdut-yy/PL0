@@ -893,7 +893,7 @@ PL/0 文法描述的元语言（EBNF）符号说明
 
 关于 一维数组还有函数部分 的实现，由于没有给出相关标准格式，不同的实现 对应 不同的测试代码，由于强迫症加上临近期末考试的原因，便没有时间去实现。。
 
-刚开始做实验的时候，其实是比较难受的。在 Windows 10 早已普及的今天，我发现 Windows 10 并不兼容 Borland C++Builder 6 这个编译器。而老师给的 PL0编译器源码 只能在 Borland C++Builder 6 上运行。无奈一开始只能在实验室里做，但实验课的时间是远远不够的，于是我后来在 Windows 10 平台上装了 Windows 7 的虚拟机，安装了Borland C++Builder 6，终于把 PL0编译器 跑了起来。
+刚开始做实验的时候，其实是比较难受的。在 Windows 10 早已普及的今天，我发现 Windows 10 并不兼容 Borland C++Builder 6 这个编译器。而老师给的 PL0编译器源码 只能在 Borland C++ Builder 6 上运行。无奈一开始只能在实验室里做，但实验课的时间是远远不够的，于是我后来在 Windows 10 平台上装了 Windows 7 的虚拟机，安装了Borland C++Builder 6，终于把 PL0编译器 跑了起来。
 
 但实际上 Borland C++ Builder 6 这个编译器 并不好用，并且官方已经不再对其进行维护了，另外，PL0编译器的原代码 的多处 “迷之缩进” 使我在看懂逻辑上花了大量时间。最后实在忍受不了，只好用了一个下午的时间使用 Qt 写了个 PL0编译器的高仿重制版。除了重写了 GUI 和修复了几个小 BUG 以外，尽最大力度保持了与源码的一致。
 
@@ -901,6 +901,6 @@ PL/0 文法描述的元语言（EBNF）符号说明
 
 ## 九、附录：源代码
 
-Borland C++Builder 6 版本_源码：[https://github.com/gdut-yy/PL0/tree/master/PL0_Des](https://github.com/gdut-yy/PL0/tree/master/PL0_Des)
+Borland C++Builder 6 版本_源码：[https://github.com/gdut-yy/PL0/blob/master/PL0_Des/pl0/Unit1.cpp](https://github.com/gdut-yy/PL0/blob/master/PL0_Des/pl0/Unit1.cpp)
 
-Qt 版本_源码：[https://github.com/gdut-yy/PL0_Qt](https://github.com/gdut-yy/PL0_Qt)
+Qt 版本_源码：[https://github.com/gdut-yy/PL0_Qt/blob/master/pl0.cpp](https://github.com/gdut-yy/PL0_Qt/blob/master/pl0.cpp)
