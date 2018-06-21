@@ -1,0 +1,15 @@
+PROGRAM DE04;
+VAR A,B,C,I;
+BEGIN
+  C:=4;
+  READ(A);	
+  READ(B);
+  FOR I:=A+1 STEP B+2 UNTIL A+B+3 DO
+  BEGIN
+  // 我是单行注释
+    WRITE(C*I);
+	/* 我是
+	多行
+	注释 */	
+  END
+END.
