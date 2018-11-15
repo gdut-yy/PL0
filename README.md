@@ -1,5 +1,7 @@
 # PL/0 语言编译系统 HomePage
 
+（2018年11月15日 更新）
+
 ## 一、INDEX
 
 | 目录 | 说明 |
@@ -20,6 +22,7 @@
 不过吐槽归吐槽，PL/0 语言编译系统 的源码思想才是最重要的，就算用Qt重写，也不过是换了个壳而已，核心的东西依然没变，所以还是要把精力放在源码上。
 
 欢迎各位交流学习，谢谢~
+
 
 ## 三、Borland C++Builder 6 与 Qt Creator 4.5.0
 
@@ -57,3 +60,9 @@
 		（3）扩充函数：① 有返回值和返回语句；② 有参数函数。   
 		（4）增加一维数组类型（可增加指令）。   
 		（5）其他典型语言设施。         
+
+## 六、建议参考（目标拿优秀的童鞋）
+
+1. [百度文库-10级编译原理课程设计报告](https://wenku.baidu.com/view/d3b08266b84ae45c3b358cb5.html?from=search)
+2. [百度文库-PL0编译原理课程设计(3109006080何路生) ](https://wenku.baidu.com/view/515e15262f60ddccda38a010.html?from=search)
+3. [answer.cpp](https://github.com/gdut-yy/PL0/blob/master/answer.cpp)
